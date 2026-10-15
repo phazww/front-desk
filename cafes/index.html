@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>A website assistant for cafes and bakeries that never makes up your prices</title>
+<meta name="description" content="An assistant for your cafe or bakery website. It answers hours, prices, cake orders and allergen questions from your own pages, and every price is checked before a customer sees it.">
+<link rel="canonical" href="https://phazww.github.io/front-desk/cafes/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="A website assistant for cafes and bakeries that never makes up your prices">
+<meta property="og:description" content="Answers hours, prices, cake orders and allergen questions from your own pages. Every price is checked before a customer sees it.">
+<meta property="og:url" content="https://phazww.github.io/front-desk/cafes/">
+<style>
+  :root {
+    --bg: #fbf6ee; --card: #ffffff; --ink: #2b2118; --muted: #6f6257; --line: #eadfce;
+    --accent: #b4532a; --accent-ink: #fff; --ok: #2f7a4b; --ok-bg: #e7f3ea; --warn: #8a5a12; --warn-bg: #fbefd6;
+    --serif: "Iowan Old Style", "Charter", "Palatino Linotype", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.55 var(--sans); }
+  a { color: var(--accent); }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+  header { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; }
+  .logo { font: 600 18px/1 var(--serif); color: var(--ink); text-decoration: none; }
+  .logo b { color: var(--accent); }
+  header nav a { color: var(--muted); text-decoration: none; font-size: 15px; margin-left: 18px; }
+
+  .hero { display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; padding: 36px 0 56px; }
+  h1 { font: 600 clamp(32px, 5vw, 52px)/1.08 var(--serif); letter-spacing: -.02em; margin: 0 0 18px; text-wrap: balance; }
+  .lede { font-size: 19px; color: var(--muted); margin: 0 0 26px; max-width: 34ch; }
+  .btns { display: flex; flex-wrap: wrap; gap: 12px; }
+  .btn { display: inline-block; padding: 13px 20px; border-radius: 999px; font-weight: 600; text-decoration: none; background: var(--accent); color: var(--accent-ink); }
+  .btn.alt { background: transparent; color: var(--ink); border: 1.5px solid var(--line); }
+  .small { font-size: 14px; color: var(--muted); margin-top: 14px; }
+
+  .phone { width: 320px; max-width: 100%; margin: 0 auto; background: #1f1813; border-radius: 40px; padding: 12px; box-shadow: 0 30px 60px -20px rgba(80, 40, 10, .35); }
+  .screen { background: #fffaf3; border-radius: 30px; overflow: hidden; }
+  .bar { display: flex; align-items: center; gap: 10px; padding: 16px 16px 12px; border-bottom: 1px solid var(--line); }
+  .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--accent); color: #fff; display: grid; place-items: center; font: 600 15px/1 var(--serif); }
+  .bar b { font-size: 14px; display: block; }
+  .bar span { font-size: 12px; color: var(--ok); }
+  .chat { padding: 14px 12px 18px; display: flex; flex-direction: column; gap: 8px; font-size: 13.5px; line-height: 1.4; }
+  .me, .bot { max-width: 86%; padding: 9px 12px; border-radius: 16px; }
+  .me { align-self: flex-end; background: var(--accent); color: #fff; border-bottom-right-radius: 5px; }
+  .bot { align-self: flex-start; background: #fff; border: 1px solid var(--line); border-bottom-left-radius: 5px; }
+  .tag { display: block; margin-top: 7px; font-size: 11.5px; font-weight: 600; padding: 4px 7px; border-radius: 6px; }
+  .tag.ok { color: var(--ok); background: var(--ok-bg); }
+  .tag.warn { color: var(--warn); background: var(--warn-bg); }
+
+  section { padding: 56px 0; border-top: 1px solid var(--line); }
+  h2 { font: 600 clamp(26px, 3.4vw, 34px)/1.15 var(--serif); margin: 0 0 22px; letter-spacing: -.01em; }
+  .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 22px; }
+  .card .n { width: 34px; height: 34px; border-radius: 50%; background: var(--bg); border: 1px solid var(--line); display: grid; place-items: center; font: 600 15px/1 var(--serif); color: var(--accent); margin-bottom: 12px; }
+  .card h3 { margin: 0 0 6px; font-size: 18px; }
+  .card p { margin: 0; color: var(--muted); font-size: 16px; }
+
+  .stat { display: grid; grid-template-columns: auto 1fr; gap: 22px; align-items: center; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 26px; }
+  .stat .num { font: 600 54px/1 var(--serif); color: var(--accent); }
+  .stat p { margin: 0; font-size: 18px; }
+  .stat small { display: block; color: var(--muted); font-size: 14px; margin-top: 6px; }
+
+  .prices { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; max-width: 720px; }
+  .price { font: 600 44px/1 var(--serif); margin: 6px 0 10px; }
+  .price span { font: 400 15px/1 var(--sans); color: var(--muted); }
+  .note { background: var(--warn-bg); color: #5d3f10; border-radius: 14px; padding: 16px 18px; font-size: 15.5px; margin-top: 22px; max-width: 720px; }
+  footer { border-top: 1px solid var(--line); padding: 26px 0 48px; color: var(--muted); font-size: 14px; }
+
+  @media (max-width: 820px) {
+    .hero { grid-template-columns: 1fr; gap: 36px; padding-top: 18px; }
+    .lede { max-width: none; }
+    .three, .prices { grid-template-columns: 1fr; }
+    .stat { grid-template-columns: 1fr; gap: 8px; }
+  }
+  @media (max-width: 480px) {
+    .wrap { padding: 0 16px; }
+    header nav a { margin-left: 12px; font-size: 14px; }
+    section { padding: 40px 0; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <a class="logo" href="./">Front Desk <b>·</b> cafes</a>
+  <nav><a href="#how">How it works</a><a href="#price">Price</a></nav>
+</header>
+
+<div class="hero">
+  <div>
+    <h1>A website assistant that never makes up your prices.</h1>
+    <p class="lede">It answers your customers' everyday questions from your own menu and pages. If it isn't sure, it gives them your phone number instead of guessing.</p>
+    <div class="btns"><a class="btn" href="../#recorded">Try the demo bakery</a><a class="btn alt" href="#price">From $500</a></div>
+    <p class="small">The answers on the phone are real ones from the demo.</p>
+  </div>
+  <div class="phone" aria-label="Example chat on a bakery website">
+    <div class="screen">
+      <div class="bar"><div class="avatar">J</div><div><b>Juniper Street Bakery</b><span>● answers from our site</span></div></div>
+      <div class="chat">
+        <div class="me">Can I order a birthday cake for tomorrow?</div>
+        <div class="bot">No, we require at least 72 hours in advance for custom cakes. Custom cakes start at $45 for a 6 inch cake and $65 for an 8 inch cake.<span class="tag ok">✓ Checked against the cake page</span></div>
+        <div class="me">Do you have pizza?</div>
+        <div class="bot">I can't find that on our site, and I don't want to guess. Please call us on +1 555 0142 or write to hello@juniperstreet.example.<span class="tag warn">Not on the site, so not answered</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section>
+  <h2>What it does for you</h2>
+  <div class="three">
+    <div class="card"><div class="n">1</div><h3>Answers the same questions, day and night</h3><p>Hours, prices, vegan options, cake lead times, delivery, parking.</p></div>
+    <div class="card"><div class="n">2</div><h3>Checks every price before it's shown</h3><p>If a number in the answer isn't on your page, the answer never reaches the customer.</p></div>
+    <div class="card"><div class="n">3</div><h3>Says "call us" instead of guessing</h3><p>Questions your pages don't cover get your phone number, not an invented promotion.</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="stat">
+    <div class="num">27 / 592</div>
+    <p>small business websites in Austin had any chat at all when I checked on 15 October 2026.<small>Most of those were plain live chat. An assistant that answers well is still rare on a local cafe's site.</small></p>
+  </div>
+</section>
+
+<section id="how">
+  <h2>How it works</h2>
+  <div class="three">
+    <div class="card"><div class="n">1</div><h3>Send your menu</h3><p>Prices, hours, cake and delivery rules. A link to your site is often enough.</p></div>
+    <div class="card"><div class="n">2</div><h3>See it tested</h3><p>I check it on about 30 questions your customers really ask and show you the results before you pay the rest.</p></div>
+    <div class="card"><div class="n">3</div><h3>It goes on your site</h3><p>One small snippet. When your menu changes, I update it.</p></div>
+  </div>
+</section>
+
+<section id="price">
+  <h2>Price</h2>
+  <div class="prices">
+    <div class="card"><h3>Setup</h3><div class="price">$500 <span>one time</span></div><p>Your assistant, the test results and installation. Fixed price agreed before I start.</p></div>
+    <div class="card"><h3>Care</h3><div class="price">$150 <span>/ month</span></div><p>Menu and price updates, tests re-run after every change.</p></div>
+  </div>
+  <p class="note"><b>About allergens.</b> The assistant is set up to pass on what your own allergen statement says and to send anything beyond it to your staff. It is tested on allergy questions before it goes live.</p>
+  <div class="btns" style="margin-top:26px"><a class="btn" href="https://contra.com/phaz_3lpd033k" rel="noopener" target="_blank">Order on Contra</a><a class="btn alt" href="https://x.com/phaz_dev" rel="noopener" target="_blank">Ask me on X</a></div>
+</section>
+
+<footer>Made by <a href="https://x.com/phaz_dev">@phaz_dev</a>. Juniper Street Bakery is made up for the demo. Running costs depend on how many questions you get; I estimate them before you decide. Visits are counted with GoatCounter, without cookies. <a href="../">How the checks work</a></footer>
+</div>
+<script data-goatcounter="https://phaz.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
