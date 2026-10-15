@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Front Desk: a site assistant that only says what your site says</title>
+<meta name="description" content="A demo of an AI assistant for a small business site. It answers from the site's own text, and code checks every price and time against the source before the customer sees it. When it is not sure, it says so.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Front Desk: a site assistant that only says what your site says">
+<meta property="og:description" content="Every price and time in an answer is checked against the site's own text before the customer sees it.">
+<link rel="canonical" href="https://phazww.github.io/front-desk/">
+<meta property="og:url" content="https://phazww.github.io/front-desk/">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+<header class="site">
+  <a class="brand" href="./">Front Desk <span>a site assistant that does not make things up</span></a>
+  <nav class="site"><a href="#how">How it works</a><a href="#yours">For your site</a></nav>
+</header>
+
+<main>
+<div class="hero">
+  <h1>A chat assistant that only says what your site says.</h1>
+  <p class="lede">Most site chatbots will invent a price or an opening time if you ask the right way. This one drafts an answer with an open model, then code checks every number and every word in it against your own page. If a check fails, the customer sees your page's exact words or your phone number instead.</p>
+  <p class="demo-note">Try it on Juniper Street Bakery, a bakery made up for this demo. Its whole site is in the bakery panel next to the chat; the assistant knows nothing else.</p>
+</div>
+
+<div class="demo">
+  <aside class="kb" aria-label="The bakery's site content">
+    <h2>Juniper Street Bakery</h2>
+    <p class="kb-sub">Everything the assistant is allowed to use:</p>
+    <div id="kb"></div>
+  </aside>
+
+  <div class="chat" aria-label="Chat with the bakery's assistant">
+    <div class="chat-head">
+      <span class="dot"></span><span>Ask the bakery</span>
+      <select id="model" aria-label="Model"></select>
+    </div>
+    <div class="log" id="log" aria-live="polite"></div>
+    <div class="chips" id="chips"></div>
+    <form id="ask" class="ask">
+      <input id="q" type="text" autocomplete="off" placeholder="Ask about prices, hours, cakes, allergens…" aria-label="Your question">
+      <button id="send" type="submit">Ask</button>
+    </form>
+    <div class="engine" id="engine"></div>
+    <div class="bar" id="bar"><i></i></div>
+    <div class="row"><button id="recorded" class="ghost" type="button">See recorded answers</button></div>
+  </div>
+</div>
+
+<section id="how">
+  <h2>How it works</h2>
+  <ol class="method">
+    <li><b>Find.</b> Code picks up to three parts of the site that match the question. If nothing matches, the model is not asked at all and the customer gets your phone number.</li>
+    <li><b>Draft.</b> An open-weight model (Gemma 4 E2B or Qwen 3.5 2B) runs in the browser, reads only those parts and writes a short answer, plus the sentence it took it from.</li>
+    <li><b>Check.</b> Code confirms that sentence really is on the site, that every price, time and number in the answer appears in it ("4 pm" counts as 16:00; "$4" does not count as $4.50), and that every word that carries meaning appears somewhere in what the model was given. "We don't have a loyalty card" fails, because the site never mentions one.</li>
+    <li><b>Show or step back.</b> If the direct answer fails a check, the draft is thrown away and the customer sees the site's own words or your contact details. Extra sentences that fail are cut.</li>
+  </ol>
+  <p class="sub">The model runs on the visitor's machine through WebGPU, so questions never leave the page. On a real site the same checks work with a hosted model too.</p>
+  <p class="sub" id="test-line">Test set: 31 questions with known answers, 8 of them not answerable from the site. Gemma 4 E2B's answers, recorded on 15 October 2026, get 29 right with the current checks, and none of the answers shown says anything the site does not. Open the page with <a href="#tests">#tests</a> to run it yourself.</p>
+  <p class="sub"><b>What the checks do not catch.</b> A wrong yes or no when every word is on the site, or an answer that is true but does not answer the question. In the test set Gemma answered "Is the bakery open on Christmas Day?" with the regular hours. That is why every real setup starts with a test set of the business's own customer questions.</p>
+</section>
+
+<section id="yours">
+  <h2>Want this on your site?</h2>
+  <p class="sub">I set it up on your own content: your prices, hours and FAQ, with a test set of real customer questions so you can see how often it is right before it goes live. Fixed price from $500.</p>
+  <div class="cta"><a href="https://contra.com/phaz_3lpd033k" rel="noopener" target="_blank">See services and prices</a> <a class="ghost" href="https://x.com/phaz_dev" rel="noopener" target="_blank">Message me on X</a></div>
+</section>
+</main>
+
+<footer class="site">Made by <a href="https://x.com/phaz_dev">@phaz_dev</a>. Juniper Street Bakery, its address and phone number are made up. Visits are counted with GoatCounter, without cookies; questions are never sent anywhere. Code: <a href="https://github.com/phazww/front-desk">GitHub</a>.</footer>
+</div>
+<script src="kb.js"></script>
+<script src="desk.js"></script>
+<script src="recorded.js"></script>
+<script src="app.js"></script>
+<script data-goatcounter="https://phaz.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
