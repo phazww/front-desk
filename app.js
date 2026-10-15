@@ -110,6 +110,9 @@ $("recorded").addEventListener("click", () => {
 
 if (!navigator.gpu) status("This browser has no WebGPU, so the live model cannot run here. Press \"See recorded answers\" to see real answers and the checks.");
 
+// A link with #recorded opens straight on the recorded answers.
+if (location.hash === "#recorded") { $("recorded").click(); document.querySelector(".demo").scrollIntoView(); }
+
 // Test set: open the page with #tests.
 if (location.hash === "#tests") {
   const sec = document.createElement("section");
