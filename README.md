@@ -33,7 +33,15 @@ Open the page with `#tests` in a browser with WebGPU and press the button. The m
         data-content="https://your-site.com/front-desk.json" async></script>
 ```
 
-Without `data-endpoint` it runs in quote mode: no model, it shows the closest part of the site word for word, or the contact details. With `data-endpoint` (an OpenAI-compatible proxy that holds the key) it drafts answers and runs the same checks, falling back to quote mode when a check fails. On the 31 test questions, quote mode shows the right part of the site or declines in 29 cases; the test questions were also used while writing the search words, so expect less on new content.
+Without `data-endpoint` it runs in quote mode: no model, it shows the closest part of the site word for word, or the contact details. With `data-endpoint` (an OpenAI-compatible proxy that holds the key) it drafts answers and runs the same checks, falling back to quote mode when a check fails. On the 31 test questions, quote mode shows the right part of the site or declines in 30 cases; the test questions were also used while writing the search words and rules, so expect less on new content.
+
+## Import a site
+
+```
+node tools/import-site.js https://example-cafe.com > front-desk.json
+```
+
+Fetches the home page and up to 12 linked pages of the same site (one request at a time), cuts the text into entries at headings, drops embedded social feeds, finds the phone and email, and adds search hints to entries that contain an address, hours, prices, allergens, orders, delivery, parking or reservations. The result is a draft to read and fix by hand. Menus published as images or PDFs are not read, so prices often have to be added by hand.
 
 ## Use it on a real site
 

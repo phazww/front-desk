@@ -32,12 +32,13 @@
     });
   }
 
-  let data = null, index = null;
+  let data = null, index = null, siteWords = null;
   async function ready() {
     if (data) return;
     const [Desk, res] = await Promise.all([loadDesk(), fetch(cfg.content)]);
     data = await res.json();
     index = Desk.makeIndex(data.entries);
+    siteWords = new Set(Desk.tokens(data.entries.map((e) => e.title + " " + e.text + " " + (e.words || "")).join(" ")));
   }
 
   const contact = () => `Please call us on ${data.business.phone}${data.business.email ? " or write to " + data.business.email : ""}.`;
@@ -52,7 +53,8 @@
       // "do you sell wedding dresses" should not be answered with the bread prices.
       const asked = [...new Set(Desk.tokens(q))];
       const words = new Set(Desk.tokens(hits[0].entry.title + " " + hits[0].entry.text + " " + (hits[0].entry.words || "")));
-      if (!asked.length || asked.filter((t) => words.has(t)).length / asked.length < 0.5) return { kind: "none", text: `I can't find that on our site, and I don't want to guess. ${contact()}` };
+      // If half the question is words the site never uses ("croissant" on a site without croissants), the site doesn't cover it.
+      if (!asked.length || asked.filter((t) => !siteWords.has(t)).length / asked.length >= 0.5 || asked.filter((t) => words.has(t)).length / asked.length < 0.5) return { kind: "none", text: `I can't find that on our site, and I don't want to guess. ${contact()}` };
       return { kind: "quote", entry: hits[0].entry };
     }
     const res = await fetch(cfg.endpoint, {
