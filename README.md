@@ -24,6 +24,17 @@ The bakery in the demo, Juniper Street Bakery, is made up. Its whole "site" is i
 
 Open the page with `#tests` in a browser with WebGPU and press the button. The model downloads once and is cached.
 
+## Widget
+
+`widget.js` adds a chat button to any site with one script tag (see `widget.html`):
+
+```html
+<script src="https://phazww.github.io/front-desk/widget.js"
+        data-content="https://your-site.com/front-desk.json" async></script>
+```
+
+Without `data-endpoint` it runs in quote mode: no model, it shows the closest part of the site word for word, or the contact details. With `data-endpoint` (an OpenAI-compatible proxy that holds the key) it drafts answers and runs the same checks, falling back to quote mode when a check fails. On the 31 test questions, quote mode shows the right part of the site or declines in 29 cases; the test questions were also used while writing the search words, so expect less on new content.
+
 ## Use it on a real site
 
 Replace `kb.js` with the business's own content and write a test set from real customer questions. The checks do not depend on the model, so a hosted model can replace the in-browser one.

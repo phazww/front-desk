@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Front Desk widget: one line on your site</title>
+<meta name="description" content="Add the Front Desk chat button to any site with one script tag. It answers from your own content and never makes up a price.">
+<link rel="canonical" href="https://phazww.github.io/front-desk/widget.html">
+<link rel="stylesheet" href="style.css">
+<style>
+  pre { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; overflow-x: auto; font: 13.5px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .modes { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .mode { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+  .mode h3 { font-size: 16px; margin-bottom: 6px; }
+  .mode p { margin: 0; color: var(--muted); font-size: 15px; }
+  @media (max-width: 720px) { .modes { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="site">
+  <a class="brand" href="./">Front Desk <span>widget</span></a>
+  <nav class="site"><a href="./">Demo</a><a href="cafes/">For cafes</a></nav>
+</header>
+<main>
+<div class="hero">
+  <h1>One line on your site.</h1>
+  <p class="lede">The chat button in the corner of this page is the real widget, running on the demo bakery's content. Open it and ask about hours, cakes or delivery.</p>
+</div>
+
+<section>
+  <h2>Install</h2>
+  <p class="sub">Paste this before <code>&lt;/body&gt;</code>. The content file holds your business details and pages; I prepare it from your site.</p>
+<pre>&lt;script src="https://phazww.github.io/front-desk/widget.js"
+        data-content="https://your-site.com/front-desk.json"
+        data-color="#b4532a" async&gt;&lt;/script&gt;</pre>
+</section>
+
+<section>
+  <h2>Two modes</h2>
+  <div class="modes">
+    <div class="mode"><h3>Quote mode (this page)</h3><p>No model at all. It finds the part of your site that matches the question and shows it word for word, or gives your phone number. Nothing can be made up and nothing is paid per question.</p></div>
+    <div class="mode"><h3>Answer mode</h3><p>With a model endpoint added, it writes a short answer, and the same checks as in the <a href="./">demo</a> run before it is shown: quote on the site, every number matching, every word backed by the site. If a check fails, it falls back to quote mode.</p></div>
+  </div>
+</section>
+</main>
+<footer class="site">Made by <a href="https://x.com/phaz_dev">@phaz_dev</a>. The demo bakery is made up. <a href="https://github.com/phazww/front-desk/blob/main/widget.js">widget.js on GitHub</a>.</footer>
+</div>
+<script src="widget.js" data-content="bakery.json" data-color="#b4532a" async></script>
+</body>
+</html>
